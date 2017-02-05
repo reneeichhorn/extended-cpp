@@ -73,3 +73,7 @@ Scoping is not yet implemented fully. More informations soon_tm.
 // moduleb scope is now already polluted with x as importing is not limiting it's scope.
 ```
 Of course you are not supposed to abuse this but in the worst case you get redeclaration errors..
+
+**How could this be archieved?**
+A simple fix would be to only allow imports in the beginning of the file and actually renaming all imported symbols with some prefix '_prefix_do_not_use_...' and create a define after all imports that allows the original naming.
+Simple and cheasy..
