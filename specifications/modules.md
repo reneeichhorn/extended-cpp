@@ -62,3 +62,14 @@ Creates a new type alias / type definition and also exports it
 
 ### Scoping
 Scoping is not yet implemented fully. More informations soon_tm.
+**Why is this needed?** Look at the following code:
+```cpp
+// modulea.cpp
+#import { x } from my::moduleC;
+#import { foo, bar } from my::moduleB;
+...
+
+// moduleb.cpp
+// moduleb scope is now already polluted with x as importing is not limiting it's scope.
+```
+Of course you are not supposed to abuse this but in the worst case you get redeclaration errors..
