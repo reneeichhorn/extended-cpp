@@ -2,7 +2,9 @@
 
 ## State
 :x: Assignment
+
 :x: Destructuring
+
 :x: Type
 
 ## Assignment
