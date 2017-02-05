@@ -41,6 +41,7 @@ my_custom_format [
   + TODO: Exporting global functions and variables
 
 ## ToDo
+- EqualsSwitchCase
 - Constraints and concepts
 - Ranges
 - Reflection
