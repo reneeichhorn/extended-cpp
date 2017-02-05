@@ -15,6 +15,21 @@ ExtendedCPP is designed to allow modern features in c++ before it is actually pa
 
 # Feature List
 Note that extended-cpp equips a fully powered c++ parser which can be used to parse c++ without any transpiling.
+It's using parser-toolkit as a backend for parsing and analyzing, this means syntax and grammar can also
+be applied to your custom language/syntax created with parser-toolkit to allow for example inline c++ blocks. (with or without extensions)
+```c++
+my_custom_format [
+  my_custom_script [
+    abc := 1
+    cba := 2
+  ]
+  
+  cpp_block [
+    auto a = 1.6f;
+    printf('%dd', a);
+  ]
+]
+```
 
 ## Done
 
