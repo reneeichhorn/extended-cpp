@@ -8,6 +8,9 @@ module.exports = (plugin, t) => {
 
     // helper functions
     const create = (options) => {
+        options.root = false;
+
+        // store in relevant registries
         if (options.type == 'exp') {
             expressions.push(options.name);
         } else if (options.type == 'stmt') {
@@ -17,6 +20,26 @@ module.exports = (plugin, t) => {
             statements.push(options.name);
         }
 
+        // add default parsed function that simply stores it
+        // child(ren) expression(s)
+        if (typeof options.parsed === 'undefined') {
+            options.parsed = (tokens, children) => {
+                if (children.length == 2) {
+                    return {
+                        type: options.name,
+                        left: children[0][0],
+                        right: children[1][0],
+                    };
+                } else {
+                    return {
+                        type: options.name,
+                        expr: childrn[0][0],
+                    };
+                }
+            };
+        }
+
+        // create actual grammar rule in parser-toolkit
         plugin.createGrammar(options);
     });
 
@@ -28,10 +51,22 @@ module.exports = (plugin, t) => {
         }
     }).get();
 
-    output.STMTS = plugin.createHolder({
+    const STMT = plugin.createHolder({
         name: 'statement_holder',
         filter(f) {
             return statements.indexOf(f.type) !== -1;
+        }
+    }).get();
+
+    output.STMT = plugin.createGrammar({
+        name: 'statement',
+        grammar: `${STMT} ${t.SEMICOLON}`
+    });
+
+    output.STMTS = plugin.createHolder({
+        name: 'pub_statement_holder',
+        filter(f) {
+            return f.type === 'statement';
         }
     }).get();
 
@@ -80,12 +115,17 @@ module.exports = (plugin, t) => {
     });
 
     // call operator
-    plugin.create
+    const paramList = plugin.createGrammar({
+        root: false,
+        name: 'param_list',
+        grammar: `${o.EXPR} #_${t.COMMA} -SELF-_#`,
+    }).get();
 
     create({
         type: 'both',
         name: 'call',
-        grammar: `${o.EXPR} ${t.PO} #_ _# ${t.PO}`,
+        grammar: `${o.EXPR} ${t.PO} #_${paramList}_# ${t.PO}`,
     });
 
+    return output;
 };
