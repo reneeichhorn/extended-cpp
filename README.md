@@ -17,32 +17,32 @@ ExtendedCPP is designed to allow modern features in c++ before it is actually pa
 Note that extended-cpp equips a fully powered c++ parser which can be used to parse c++ without any transpiling.
 It's using parser-toolkit as a backend for parsing and analyzing, this means syntax and grammar can also
 be applied to your custom language/syntax created with parser-toolkit to allow for example inline c++ blocks. (with or without extensions)
-```c++
-my_custom_format [
-  my_custom_script [
-    abc := 1
-    cba := 2
-  ]
-  
-  cpp_block [
-    auto a = 1.6f;
-    printf('%dd', a);
-  ]
-]
+
+To get an overview of all features and their wip state, see the specification/ folder.
+
+# Usage
+```js
+// build_script.js
+// -----------------
+
+// Transpiling
+// ---------------------
+const ExtendedCpp = require('extended-cpp');
+
+const cpp = new ExtendedCpp([
+  // feature list
+  'modules',
+  'tuples',
+  ...
+]);
+
+cpp.addSource('my_module_a.cpp');
+cpp.addSource('my_module_b.cpp');
+cpp.transpile('temp/');
+
+// Compiling
+// ------------------
+cpp.compile();
+// Note: compile() will use ${CXX} environment variable as a compiler
+
 ```
-
-## Done
-
-## Partly done / WIP
-- Modules
-  + DONE: Headerless c++
-  + DONE: Exporting and importing classes/struct/enum
-  + DONE: Exporting and importing defines/typedefs
-  + TODO: Exporting global functions and variables
-
-## ToDo
-- EqualsSwitchCase
-- Constraints and concepts
-- Ranges
-- Reflection
-- Async / Await (Coroutines)
