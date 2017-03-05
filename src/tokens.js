@@ -97,7 +97,7 @@ module.exports = (plugin) => {
     exp.SEMICOLON = plugin.createToken({
         name: 'semicolon',
         expression: ';',
-    });
+    }).get();
 
 
     // Expressions

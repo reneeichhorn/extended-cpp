@@ -48,21 +48,42 @@ module.exports = (plugin, t) => {
     output.EXPR = plugin.createHolder({
         name: 'expression_holder',
         filter(f) {
-            return expressions.indexOf(f.name) !== -1;
-        }
+            let state = false;
+
+            expressions.forEach(stmt => {
+                if (f.name.indexOf(stmt) !== -1) {
+                    state = true;
+                }
+            });
+
+            return state;
+        },
+        maxElements: 1,
     }).get();
 
     const STMT = plugin.createHolder({
         name: 'statement_holder',
         filter(f) {
-            return statements.indexOf(f.name) !== -1;
-        }
+            let state = false;
+
+            statements.forEach(stmt => {
+                if (f.name.indexOf(stmt) !== -1) {
+                    state = true;
+                }
+            });
+
+            return state;
+        },
+        maxElements: 1,
     }).get();
 
     output.STMT = plugin.createGrammar({
         root: false,
         name: 'statement',
-        grammar: `${STMT} ${t.SEMICOLON}`
+        grammar: `${STMT} ${t.SEMICOLON}`,
+        parsed(tokens, children) {
+            return children[0].parse()[0];
+        },
     });
 
     output.STMTS = plugin.createHolder({
@@ -120,12 +141,12 @@ module.exports = (plugin, t) => {
     create({
         type: 'both',
         name: 'stream_left',
-        grammar: `${o.EXPR} ${t.STREAMLEFT} ${o.EXPR}`,
+        grammar: `${o.EXPR} ${t.LEFTSTREAM} ${o.EXPR}`,
     });
     create({
         type: 'both',
         name: 'stream_right',
-        grammar: `${o.EXPR} ${t.STREAMRIGHT} ${o.EXPR}`,
+        grammar: `${o.EXPR} ${t.RIGHTSTREAM} ${o.EXPR}`,
     });
 
     return output;

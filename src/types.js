@@ -13,10 +13,10 @@ module.exports = (tokens, expressions) => {
         name: 'typeref',
         grammar: `${t.IDENT}:name #_${t.NSS} -SELF-_#`,
         parsed: (tokens, children) => {
-            const path = [tokens.name.value];
+            let path = [tokens.name.value];
 
             if (children.length > 0) {
-                path = path.concat(children[0].path);
+                path = path.concat(children[0].parse().path);
             }
 
             return {
@@ -30,11 +30,12 @@ module.exports = (tokens, expressions) => {
     e.createGrammar({
         type: 'stmt',
         name: 'variable_decl',
-        grammar: `${o.TYPEREF} ${t.IDENT}:name #_${t.ASSIGN} ${e.EXPR}_#`,
+        grammar: `${o.TYPEREF}:type ${t.IDENT}:name #_${t.ASSIGN} ${e.EXPR}_#`,
         parsed: (tokens, children) => {
             return {
                 type: 'variable_decl',
                 name: tokens.name.value,
+                varType: children.type.parse(),
             };
         }
     });

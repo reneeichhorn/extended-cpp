@@ -9,8 +9,6 @@
 
 :x: Scoping
 
-
-
 ## Reference
 
 ### Headerless compilation
