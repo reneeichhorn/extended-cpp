@@ -5,6 +5,11 @@ module.exports = (parserToolkit) => {
     });
 
     const tokens = require('./tokens')(plugin);
-    require('./expressions')(plugin, t);
+    const expression = require('./expressions')(plugin, tokens);
+    const types = require('./types')(tokens, expression);
+    const root = require('./program')(plugin);
+    const functions = require('./function')(plugin, tokens, expression, types, root);
+
+    return root;
 };
 

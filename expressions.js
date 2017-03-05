@@ -27,38 +27,40 @@ module.exports = (plugin, t) => {
                 if (children.length == 2) {
                     return {
                         type: options.name,
-                        left: children[0][0],
-                        right: children[1][0],
+                        left: children[0].parse()[0],
+                        right: children[1].parse()[0],
                     };
                 } else {
                     return {
                         type: options.name,
-                        expr: childrn[0][0],
+                        expr: childrn[0].parse()[0],
                     };
                 }
             };
         }
 
         // create actual grammar rule in parser-toolkit
-        plugin.createGrammar(options);
-    });
+        return plugin.createGrammar(options).get();
+    };
+    output.createGrammar = create;
 
     // holders
     output.EXPR = plugin.createHolder({
         name: 'expression_holder',
         filter(f) {
-            return expressions.indexOf(f.type) !== -1;
+            return expressions.indexOf(f.name) !== -1;
         }
     }).get();
 
     const STMT = plugin.createHolder({
         name: 'statement_holder',
         filter(f) {
-            return statements.indexOf(f.type) !== -1;
+            return statements.indexOf(f.name) !== -1;
         }
     }).get();
 
     output.STMT = plugin.createGrammar({
+        root: false,
         name: 'statement',
         grammar: `${STMT} ${t.SEMICOLON}`
     });
@@ -66,7 +68,7 @@ module.exports = (plugin, t) => {
     output.STMTS = plugin.createHolder({
         name: 'pub_statement_holder',
         filter(f) {
-            return f.type === 'statement';
+            return f.name === 'statement';
         }
     }).get();
 
@@ -114,17 +116,16 @@ module.exports = (plugin, t) => {
         grammar: `${o.EXPR} ${t.LTE} ${o.EXPR}`,
     });
 
-    // call operator
-    const paramList = plugin.createGrammar({
-        root: false,
-        name: 'param_list',
-        grammar: `${o.EXPR} #_${t.COMMA} -SELF-_#`,
-    }).get();
-
+    // stream exoression/statement
     create({
         type: 'both',
-        name: 'call',
-        grammar: `${o.EXPR} ${t.PO} #_${paramList}_# ${t.PO}`,
+        name: 'stream_left',
+        grammar: `${o.EXPR} ${t.STREAMLEFT} ${o.EXPR}`,
+    });
+    create({
+        type: 'both',
+        name: 'stream_right',
+        grammar: `${o.EXPR} ${t.STREAMRIGHT} ${o.EXPR}`,
     });
 
     return output;

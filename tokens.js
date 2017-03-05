@@ -79,7 +79,7 @@ module.exports = (plugin) => {
         expression: '(',
     }).get();
     exp.PC = plugin.createToken({
-        name: 'para_open',
+        name: 'para_close',
         expression: ')',
     }).get();
     exp.INHERITS = plugin.createToken({
@@ -90,6 +90,15 @@ module.exports = (plugin) => {
         name: 'comma',
         expression: ',',
     }).get();
+    exp.NSS = plugin.createToken({
+        name: 'namespace_seperator',
+        expression: '::',
+    }).get();
+    exp.SEMICOLON = plugin.createToken({
+        name: 'semicolon',
+        expression: ';',
+    });
+
 
     // Expressions
     exp.STAR = plugin.createToken({
@@ -115,22 +124,22 @@ module.exports = (plugin) => {
 
     // Bitwise operators
     exp.LEFTSHIFT = plugin.createToken({
-        name: 'left_shift'
+        name: 'left_shift',
         expression: '<',
     }).get();
     exp.RIGHTSHIFT = plugin.createToken({
-        name: 'right_shift'
+        name: 'right_shift',
         expression: '>',
     }).get();
     
 
     // Stream operators
     exp.LEFTSTREAM = plugin.createToken({
-        name: 'left_stream'
+        name: 'left_stream',
         expression: '<<',
     }).get();
     exp.RIGHTSTREAM = plugin.createToken({
-        name: 'right_stream'
+        name: 'right_stream',
         expression: '>>',
     }).get();
 
@@ -182,7 +191,6 @@ module.exports = (plugin) => {
         expression: '*', // redeclaration of star, parserToolkit will merge it together
     }).get();            // redeclared for better readability, but be aware!
 
-
     return exp;
-});
+};
 
