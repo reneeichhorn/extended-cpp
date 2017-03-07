@@ -10,13 +10,13 @@ module.exports = (plugin, tokens, expression, types, root) => {
         name: 'param_list',
         grammar: `${e.EXPR}:expr #_${t.COMMA} -SELF-_#`,
         parsed(tokens, children) {
-            const params = [];
+            let params = [];
             params.push({
                 expr: children.expr.parse()[0],
             });
 
             if (children.length > 1) {
-                params.concat(children[1].parse().params);
+                params = params.concat(children[1].parse()[0].params);
             }
 
             return {

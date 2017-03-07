@@ -19,7 +19,111 @@ suite('Stream Test Suite', () => {
             }
         `;
         const result = toolkit.parse(test);
-        console.log(JSON.stringify(result[0].parse(), null, '\t'));
-        //console.log(result[0].parse());
+        const actual = result[0].parse();
+
+        const expected = [
+            {
+                "name": "name",
+                "type": "function_decl",
+                "returnType": [
+                    {
+                        "type": "typeref",
+                        "path": [
+                            "int"
+                        ]
+                    }
+                ],
+                "parameters": [],
+                "inner": [
+                    {
+                        "type": "variable_decl",
+                        "name": "name",
+                        "varType": [
+                            {
+                                "type": "typeref",
+                                "path": [
+                                    "std",
+                                    "string",
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "stream_left",
+                        "left": {
+                            "type": "typeref",
+                            "path": [
+                                "std",
+                                "cout",
+                            ]
+                        },
+                        "right": {
+                            "type": "string_expr",
+                            "name": "\"What is your name? \""
+                        }
+                    },
+                    {
+                        "name": "call",
+                        "callee": {
+                            "type": "typeref",
+                            "path": [
+                                "getline"
+                            ]
+                        },
+                        "params": [
+                            {
+                                "expr": {
+                                    "type": "typeref",
+                                    "path": [
+                                        "std",
+                                        "cin",
+                                    ]
+                                }
+                            },
+                            {
+                                "expr": {
+                                    "type": "typeref",
+                                    "path": [
+                                        "name",
+                                    ],
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "type": "stream_left",
+                        "left": {
+                            "type": "typeref",
+                            "path": [
+                                "std",
+                                "cout",
+                            ]
+                        },
+                        "right": {
+                            "type": "stream_left",
+                            "left": {
+                                "type": "string_expr",
+                                "name": "\"Hello, \""
+                            },
+                            "right": {
+                                "type": "stream_left",
+                                "left": {
+                                    "type": "typeref",
+                                    "path": [
+                                        "name"
+                                    ]
+                                },
+                                "right": {
+                                    "type": "string_expr",
+                                    "name": "\"!\\n\""
+                                }
+                            }
+                        }
+                    }
+                ]
+            }
+        ];
+
+        assert.deepEqual(expected, actual);
     });
 });

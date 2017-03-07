@@ -13,10 +13,10 @@ module.exports = (tokens, expressions) => {
         name: 'typeref',
         grammar: `${t.IDENT}:name #_${t.NSS} -SELF-_#`,
         parsed: (tokens, children) => {
-            let path = [tokens.name.value];
+            let path = [tokens[0].value];
 
             if (children.length > 0) {
-                path = path.concat(children[0].parse().path);
+                path = path.concat(children[0].parse()[0].path);
             }
 
             return {
