@@ -1,3 +1,4 @@
+const workflows = require('../workflows/core');
 
 module.exports = (parserToolkit) => {
     // create cpp plugin
@@ -25,4 +26,6 @@ module.exports = (parserToolkit) => {
         },
     });
 };
+
+module.exports.transpile = workflows.transpile;
 

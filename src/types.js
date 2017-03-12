@@ -22,6 +22,9 @@ module.exports = (tokens, expressions) => {
             return {
                 type: 'typeref',
                 path: path,
+                transpile() {
+                  return path.join('::');
+                },
             };
         },
     });
@@ -35,7 +38,10 @@ module.exports = (tokens, expressions) => {
             return {
                 type: 'variable_decl',
                 name: tokens.name.value,
-                varType: children.type.parse(),
+                varType: children.type.parse()[0],
+                transpile() {
+                  return `${this.varType.transpile()} ${this.name}`;
+                },
             };
         }
     });

@@ -34,6 +34,11 @@ module.exports = (plugin, tokens, expression, types, root) => {
                 name: 'call',
                 callee: children.expr.parse()[0],
                 params: typeof children.params !== 'undefined' ? children.params.parse()[0].params : [],
+                transpile() {
+                  return `${this.callee.transpile()}(
+                                ${this.params.map(p => p.expr.transpile()).join(',')}
+                          )`;
+                },
             };
         },
 
@@ -65,20 +70,29 @@ module.exports = (plugin, tokens, expression, types, root) => {
         root: false,
         name: 'function_decl',
         
-        grammar: `${types.TYPEREF}:returns ${t.IDENT}:name ${t.PO} #_${paramDeclList}:params_# ${t.PC}
+        grammar: `${types.TYPEREF}:returns ${t.IDENT}:fnname ${t.PO} #_${paramDeclList}:params_# ${t.PC}
                   ${t.BO}
                     #_${e.STMTS}:inner_#
                   ${t.BC}`,
 
         parsed(tokens, children) {
             return {
-                name: tokens.name.value,
+                name: tokens.fnname.value,
                 type: 'function_decl',
-                returnType: children.returns.parse(),
+                returnType: children.returns.parse()[0],
                 parameters: children.params ? children.params.parse().params : [],
                 inner: children.inner ? children.inner.parse() : {},
+                transpile() {
+                    return `
+                        ${this.returnType.transpile()} ${this.name}(
+                            ${this.parameters.map(p => `${p.type.transpile()} ${p.name}`).join(',')}
+                         ) {
+                            ${this.inner.map(c => c.transpile()).join(';\n\t\t')};
+                        }
+                    `;
+                },
             }
-        }
+        },
     });
     root.registerForProgramScope('function_decl');
 };

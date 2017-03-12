@@ -1,3 +1,5 @@
+const Workflows = require('../workflows/core');
+
 module.exports = (plugin, t) => {
     const output = [];
     const o = output; // shortcut
@@ -23,17 +25,42 @@ module.exports = (plugin, t) => {
         // add default parsed function that simply stores it
         // child(ren) expression(s)
         if (typeof options.parsed === 'undefined') {
+            Workflows.CodeGeneration.extend({
+                filter(startParams) {
+                    return startParams.type === options.name;
+                },
+
+                start(type, object) {
+                    this.resolve();
+                    this.AddChildren(object.left);
+                    this.AddChildren(object.right);
+                },
+
+                Transpile() {
+                    this.resolve(`${this.children[0]} ${options.name} ${this.children[1]}`);
+                },
+            });
+
             options.parsed = (tokens, children) => {
                 if (children.length == 2) {
                     return {
                         type: options.name,
                         left: children[0].parse()[0],
                         right: children[1].parse()[0],
+                        transpile() {
+                            let type = 'unknown';
+                            tokens.forEach(to => {
+                               if (to.name == options.name) {
+                                   type = to.expression;
+                               }
+                            });
+                            return `${this.left.transpile()} ${type} ${this.right.transpile()}`;
+                        },
                     };
                 } else {
                     return {
                         type: options.name,
-                        expr: childrn[0].parse()[0],
+                        expr: children[0].parse()[0],
                     };
                 }
             };
@@ -140,12 +167,12 @@ module.exports = (plugin, t) => {
     // stream exoression/statement
     create({
         type: 'both',
-        name: 'stream_left',
+        name: 'left_stream',
         grammar: `${o.EXPR} ${t.LEFTSTREAM} ${o.EXPR}`,
     });
     create({
         type: 'both',
-        name: 'stream_right',
+        name: 'right_stream',
         grammar: `${o.EXPR} ${t.RIGHTSTREAM} ${o.EXPR}`,
     });
 

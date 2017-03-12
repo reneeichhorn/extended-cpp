@@ -12,6 +12,9 @@ module.exports = (tokens, expressions) => {
             return {
                 type: 'string_expr',
                 name: tokens.str.value,
+                transpile() {
+                    return `${this.name}`;
+                },
             };
         }
     });
