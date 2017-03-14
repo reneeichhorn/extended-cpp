@@ -49,7 +49,7 @@ module.exports = (tokens, expressions) => {
     // assignment
     e.createGrammar({
         type: 'stmt',
-        name: 'variable_assign',
+        name: 'assign',
         grammar: `${e.EXPR} ${t.ASSIGN} ${e.EXPR}`,
     });
 

@@ -1,4 +1,3 @@
-const workflows = require('../workflows/core');
 
 module.exports = (parserToolkit) => {
     // create cpp plugin
@@ -12,6 +11,7 @@ module.exports = (parserToolkit) => {
     const values = require('./values')(tokens, expression);
     const root = require('./program')(plugin);
     const functions = require('./function')(plugin, tokens, expression, types, root);
+    const struct = require('./struct')(plugin, tokens, expression, types, root);
 
     // create cpp root
     const rootPlugin = parserToolkit.createPlugin({
@@ -26,6 +26,4 @@ module.exports = (parserToolkit) => {
         },
     });
 };
-
-module.exports.transpile = workflows.transpile;
 

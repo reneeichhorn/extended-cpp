@@ -1,4 +1,3 @@
-const Workflows = require('../workflows/core');
 
 module.exports = (plugin, t) => {
     const output = [];
@@ -25,22 +24,6 @@ module.exports = (plugin, t) => {
         // add default parsed function that simply stores it
         // child(ren) expression(s)
         if (typeof options.parsed === 'undefined') {
-            Workflows.CodeGeneration.extend({
-                filter(startParams) {
-                    return startParams.type === options.name;
-                },
-
-                start(type, object) {
-                    this.resolve();
-                    this.AddChildren(object.left);
-                    this.AddChildren(object.right);
-                },
-
-                Transpile() {
-                    this.resolve(`${this.children[0]} ${options.name} ${this.children[1]}`);
-                },
-            });
-
             options.parsed = (tokens, children) => {
                 if (children.length == 2) {
                     return {

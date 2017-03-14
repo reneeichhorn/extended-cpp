@@ -18,4 +18,19 @@ module.exports = (tokens, expressions) => {
             };
         }
     });
+
+    e.createGrammar({
+        type: 'exp',
+        name: 'int_expr',
+        grammar: `${t.INT}:int`,
+        parsed: (tokens, children) => {
+            return {
+                type: 'int_expr',
+                value: tokens.int.value,
+                transpile() {
+                    return `${this.value}`;
+                },
+            };
+        }
+    });
 };
