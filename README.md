@@ -20,6 +20,15 @@ be applied to your custom language/syntax created with parser-toolkit to allow f
 
 To get an overview of all features and their wip state, see the specification/ folder.
 
+## Feature namespacing
+- `base`: Basic language features that are required to parse normal c++11.
+- `std`: Stable additional features that are considered the standard of extended c++. It should be always safe to use all.
+- `extra`: Stable additional features that don't fit the standard yet due to issues with other features for example.
+- `dev`: In development features that are not considered stable / ready yet. Syntax changes might still happen here.
+
+## Feature versioning
+All features expect the features in the `base` namespace are versioned. The version of the features MUST be always added to the feature list. When a feature moves one namespace up the version is reset to `v1`. Only major versions are tracked in the feature list. Only changes that might break existing usage.
+
 # Usage
 ```js
 // build_script.js
@@ -31,8 +40,9 @@ const ExtendedCpp = require('extended-cpp');
 
 const cpp = new ExtendedCpp([
   // feature list
-  'modules',
-  'tuples',
+  ...ExtendedCpp.base.all,
+  ExtendedCpp.std.modules.v1,
+  ExtendedCpp.extra.tuples.v1,
   ...
 ]);
 
